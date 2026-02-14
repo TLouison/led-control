@@ -15,68 +15,6 @@ namespace Gpio
 {
     typedef std::string GpioPinName_t;
 
-    class Manager
-    {
-    public:
-        Manager()
-        {
-            if (gpioInitialise() < 0)
-                throw;
-
-            this->pins = std::map<std::string, std::unique_ptr<Pin>>{};
-            this->is_ready = true;
-        }
-
-        ~Manager()
-        {
-            // Terminate the GPIO connections when done.
-            gpioTerminate();
-        }
-
-        bool keyExists(GpioPinName_t name)
-        {
-            if (this->pins.find(name) == this->pins.end())
-            {
-                return false;
-            }
-            return true;
-        }
-
-        Gpio::Pin *getPinWithName(GpioPinName_t name)
-        {
-            if (!this->keyExists(name))
-            {
-                throw std::invalid_argument(std::format("Pin with name {} does not exist.", name));
-            }
-
-            return this->pins[name].get();
-        }
-
-        void
-        addPin(GpioPinName_t name, int pin, int mode)
-        {
-            if (this->keyExists(name))
-            {
-                throw std::invalid_argument(std::format("Pin with name {} already exists.", name));
-            }
-            this->pins.insert({name, std::make_unique<Pin>(pin, mode)});
-        }
-
-        void addInputPin(GpioPinName_t name, int pin)
-        {
-            this->addPin(name, pin, PI_INPUT);
-        }
-
-        void addOutputPin(GpioPinName_t name, int pin)
-        {
-            this->addPin(name, pin, PI_OUTPUT);
-        }
-
-    private:
-        bool is_ready = false;
-        std::map<GpioPinName_t, std::unique_ptr<Gpio::Pin>> pins;
-    };
-
     class Pin
     {
     public:
@@ -127,6 +65,68 @@ namespace Gpio
     private:
         int pin;
         int mode{PI_INPUT};
+    };
+
+    class Manager
+    {
+    public:
+        Manager()
+        {
+            if (gpioInitialise() < 0)
+                throw;
+
+            this->pins = std::map<std::string, std::unique_ptr<Pin>>{};
+            this->is_ready = true;
+        }
+
+        ~Manager()
+        {
+            // Terminate the GPIO connections when done.
+            gpioTerminate();
+        }
+
+        bool keyExists(GpioPinName_t name)
+        {
+            if (this->pins.find(name) == this->pins.end())
+            {
+                return false;
+            }
+            return true;
+        }
+
+        Pin *getPinWithName(GpioPinName_t name)
+        {
+            if (!this->keyExists(name))
+            {
+                throw std::invalid_argument(std::format("Pin with name {} does not exist.", name));
+            }
+
+            return this->pins[name].get();
+        }
+
+        void
+        addPin(GpioPinName_t name, int pin, int mode)
+        {
+            if (this->keyExists(name))
+            {
+                throw std::invalid_argument(std::format("Pin with name {} already exists.", name));
+            }
+            this->pins.insert({name, std::make_unique<Pin>(pin, mode)});
+        }
+
+        void addInputPin(GpioPinName_t name, int pin)
+        {
+            this->addPin(name, pin, PI_INPUT);
+        }
+
+        void addOutputPin(GpioPinName_t name, int pin)
+        {
+            this->addPin(name, pin, PI_OUTPUT);
+        }
+
+    private:
+        bool is_ready = false;
+        std::map<GpioPinName_t, std::unique_ptr<Pin>> pins;
     };
 };
 
