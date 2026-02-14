@@ -1,5 +1,5 @@
-#include <gpio.h>
-#include <server.h>
+#include <Gpio.h>
+#include <Server.h>
 
 #define LED_GPIO_PIN 12
 

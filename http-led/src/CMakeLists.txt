@@ -1,6 +1,8 @@
+add_executable(GpioRest)
+
 target_sources(GpioRest
   PRIVATE
-    src/main.cpp
+    main.cpp
 )
 
 target_link_libraries(GpioRest
