@@ -9,6 +9,7 @@
 #include <map>
 #include <stdexcept>
 #include <format>
+#include <memory>
 
 namespace Gpio
 {
@@ -41,7 +42,7 @@ namespace Gpio
             return true;
         }
 
-        Pin *getPinWithName(GpioPinName_t name)
+        Gpio::Pin *getPinWithName(GpioPinName_t name)
         {
             if (!this->keyExists(name))
             {
@@ -73,7 +74,7 @@ namespace Gpio
 
     private:
         bool is_ready = false;
-        std::map<GpioPinName_t, std::unique_ptr<Pin>> pins;
+        std::map<GpioPinName_t, std::unique_ptr<Gpio::Pin>> pins;
     };
 
     class Pin
