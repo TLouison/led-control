@@ -1,7 +1,9 @@
 add_library(Gpio)
-set_target_properties(Gpio PROPERTIES LINKER_LANGUAGE CXX)
 
 target_sources(Gpio
+    PRIVATE
+        Gpio.cpp
+
     PUBLIC
         FILE_SET HEADERS
         FILES
