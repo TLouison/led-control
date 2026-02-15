@@ -85,6 +85,10 @@ namespace Gpio
             gpioTerminate();
         }
 
+        // Remove the copy and assignment operators
+        Manager(const Manager &) = delete;
+        Manager &operator=(const Manager &) = delete;
+
         bool keyExists(GpioPinName_t name)
         {
             if (this->pins.find(name) == this->pins.end())

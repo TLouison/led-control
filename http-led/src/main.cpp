@@ -13,6 +13,9 @@ int main(int argc, char *argv[])
 
     // Set up HTTP server (not HTTPS)
     Server::GpioServer server = Server::GpioServer(gpio);
+    std::thread thread = server.run_server();
+
+    thread.join();
 
     return 0;
 }

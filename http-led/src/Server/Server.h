@@ -14,7 +14,7 @@ namespace Server
     class GpioServer
     {
     public:
-        GpioServer(Gpio::Manager manager)
+        GpioServer(Gpio::Manager &manager)
         {
             // Set up routes
             svr.Get("/led/status", [this, &manager](const httplib::Request &, httplib::Response &res)
@@ -33,22 +33,24 @@ namespace Server
                         res.set_content(this->get_generic_success().dump(), "application/json"); });
             svr.Post("/stop", [this, &manager](const httplib::Request &, httplib::Response &res)
                      { this->svr.stop(); });
+        }
 
+        ~GpioServer()
+        {
+            std::cout << "Server has shut down." << std::endl;
+        }
+
+        std::thread run_server()
+        {
             // Run the server in a separate thread
-            std::thread svr_t([&]()
-                              {
+            return std::thread([&]()
+                               {
                 std::cout << "Server listening on http://localhost:8080" << std::endl;
                 // This call is blocking
                 if (!this->svr.listen("0.0.0.0", 8080))
                 {
                     std::cerr << "Server stopped in error state" << std::endl;
                 } });
-        }
-
-        ~GpioServer()
-        {
-            svr_t.join();
-            std::cout << "Server has shut down." << std::endl;
         }
 
         json get_generic_success()
