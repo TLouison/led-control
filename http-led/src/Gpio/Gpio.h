@@ -81,6 +81,9 @@ namespace Gpio
 
         ~Manager()
         {
+            // Clear the map to free the pins before terminating GPIO
+            this->pins.clear();
+
             // Terminate the GPIO connections when done.
             gpioTerminate();
         }
